@@ -26,26 +26,26 @@ namespace RestAPI.Components.CQRS.Spec
         [Fact]
         public void ShouldHandleTheCommandByPreviouslyRegisteredHandler()
         {
-            commandBus.registerHandler<ICommandMessage>(handler);
-            commandBus.handle(command);
+            commandBus.RegisterHandler<ICommandMessage>(handler);
+            commandBus.Handle(command);
 
-            handlerMock.Verify(h => h.handle(command), Times.Once);
+            handlerMock.Verify(h => h.Handle(command), Times.Once);
         }
 
         [Fact]
         public void ShouldThrowAnInvalidOperationExceptionWhenRegisterHandlerMoreThanOnce()
         {
-            commandBus.registerHandler<ICommandMessage>(handler);
+            commandBus.RegisterHandler<ICommandMessage>(handler);
 
             Assert.Throws<InvalidOperationException>(() => {
-                commandBus.registerHandler<ICommandMessage>(handler);
+                commandBus.RegisterHandler<ICommandMessage>(handler);
             });
         }
 
         [Fact]
         public void ShouldNotThrowAnyExceptionWhenCommandHandlerWasNotRegistered()
         {
-            var exception = Record.Exception(() => commandBus.handle(command));
+            var exception = Record.Exception(() => commandBus.Handle(command));
 
             Assert.Null(exception);
         }

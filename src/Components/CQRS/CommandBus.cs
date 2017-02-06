@@ -7,18 +7,16 @@ namespace RestAPI.Components.CQRS
     {
         private readonly Dictionary<Type, Action<ICommandMessage>> _handlers = new Dictionary<Type, Action<ICommandMessage>>();
 
-        public void registerHandler<TCommand>(IHandler<TCommand> handler) where TCommand : class, ICommandMessage {
+        public void RegisterHandler<TCommand>(IHandler<TCommand> handler) where TCommand : class, ICommandMessage {
             var type = typeof (TCommand);
             if (_handlers.ContainsKey(type)) {
                 throw new InvalidOperationException(string.Format("Handler exists for type {0}.", type));
             }
 
-            Console.WriteLine("register {0}", handler);
-
-            _handlers[type] = command => handler.handle((TCommand)command);
+            _handlers[type] = command => handler.Handle((TCommand)command);
         }
 
-        public void handle(ICommandMessage command) {
+        public void Handle(ICommandMessage command) {
             var type = command.GetType();
 
             foreach (var kvp in _handlers) {

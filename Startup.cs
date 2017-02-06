@@ -1,3 +1,6 @@
+using System;
+using System.Reflection;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -5,8 +8,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 using RestAPI.Components.CQRS;
-using RestAPI.Domain.Task.Command;
-using RestAPI.Domain.Task.Command.Handler;
 
 namespace RestAPI
 {
@@ -63,12 +64,9 @@ namespace RestAPI
 
             app.UseMvc();
 
-            this.ConfigureCommandBus(app);
-        }
-
-        private void ConfigureCommandBus(IApplicationBuilder app) {
             ICommandBus commandBus = app.ApplicationServices.GetService<ICommandBus>();
-            commandBus.registerHandler<AddTask>(new AddTaskHandler());
+            Assembly entryAssembly = Assembly.GetEntryAssembly();
+            ConfigurationService.RegisterHandlers(commandBus, entryAssembly);
         }
     }
 }
